@@ -11,51 +11,43 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="PackFit">
 <style>
-  :root{--bg:#f3f6f8;--panel:#ffffff;--panel2:#eef3f6;--text:#111827;--muted:#64748b;--accent:#0d8dcc;--accent2:#f47b20;--danger:#b42318;--border:#cbd5e1}
+  :root{--bg:#f3f6f8;--panel:#fff;--text:#111827;--muted:#64748b;--accent:#0d8dcc;--accent2:#f47b20;--danger:#b42318;--border:#cbd5e1}
   *{box-sizing:border-box}
-  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#ffffff,#eef4f7);color:var(--text);min-height:100vh}
-  .wrap{max-width:1000px;margin:auto;padding:24px}
+  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:linear-gradient(180deg,#fff,#eef4f7);color:var(--text);min-height:100vh}
+  .wrap{max-width:1080px;margin:auto;padding:24px}
   h1{margin:0 0 6px;font-size:clamp(2rem,5vw,3.4rem)}
-  .sub{color:var(--muted);margin:0 0 24px}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-  .card{background:rgba(255,255,255,.97);border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:0 18px 45px rgba(0,0,0,.22)}
+  h2,h3{margin-top:0}.sub{color:var(--muted);margin:0 0 24px}
+  .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
+  .card{background:rgba(255,255,255,.97);border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:0 18px 45px rgba(0,0,0,.12)}
   label{display:block;font-size:.9rem;color:var(--muted);margin-bottom:6px}
   input,select,button{width:100%;border-radius:12px;border:1px solid var(--border);padding:13px 14px;font-size:1rem}
-  input,select{background:#ffffff;color:var(--text);outline:none}
-  input:focus,select:focus{border-color:var(--accent2);box-shadow:0 0 0 3px rgba(56,189,248,.12)}
-  .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-  .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  button{border:0;background:var(--accent);color:white;font-weight:800;cursor:pointer;margin-top:12px}
+  input,select{background:#fff;color:var(--text);outline:none}
+  input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(13,141,204,.12)}
+  .row3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  button{border:0;background:var(--accent);color:#fff;font-weight:800;cursor:pointer;margin-top:12px}
   button.secondary{background:#eef3f6;color:var(--text);border:1px solid var(--border)}
-  button.danger{background:#fff1f0;color:#b42318;border:1px solid #f3b7b1}
-  .results{margin-top:18px}
-  .winner{border:1px solid #7cc5e7;background:#edf8fd;padding:16px;border-radius:16px}
-  .winner h2{margin:0 0 8px}
-  .metric{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:1px solid rgba(148,163,184,.15)}
-  .metric:last-child{border-bottom:0}
-  .metric span:first-child{color:var(--muted)}
+  button.danger{background:#fff1f0;color:var(--danger);border:1px solid #f3b7b1}
+  .helper{color:var(--muted);font-size:.82rem;margin:7px 0 0}
+  .results{margin-top:18px}.winner{border:1px solid #7cc5e7;background:#edf8fd;padding:16px;border-radius:16px}.winner h2{margin:0 0 8px}
+  .metric{display:flex;justify-content:space-between;gap:16px;padding:8px 0;border-bottom:1px solid rgba(148,163,184,.18)}.metric:last-child{border-bottom:0}.metric span:first-child{color:var(--muted)}
+  .inventory{max-height:470px;overflow:auto}.boxrow{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid rgba(148,163,184,.15)}.boxrow small{color:var(--muted)}
   .alt{margin-top:14px;padding:12px;border:1px solid var(--border);border-radius:12px;background:#f8fafc}
-  .inventory{max-height:460px;overflow:auto}
-  .boxrow{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid rgba(148,163,184,.12)}
-  .boxrow small{color:var(--muted)}
-  .pill{padding:5px 9px;border-radius:999px;font-size:.78rem;background:#f8fafc;border:1px solid var(--border)}
-  .empty{color:var(--muted);padding:10px 0}
+  .pack-list{display:grid;gap:12px;margin-top:14px}.pack-card{border:1px solid var(--border);border-radius:14px;padding:13px;background:#fff}
+  .pack-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:10px}.pack-head strong{font-size:1.02rem}.pack-head small{color:var(--muted)}
+  .diagram{display:grid;gap:3px;width:100%;max-width:320px;aspect-ratio:1.6/1;border:2px solid #94a3b8;padding:5px;border-radius:8px;background:#f8fafc;overflow:hidden}
+  .cell{border:1px solid rgba(13,141,204,.35);background:rgba(13,141,204,.14);border-radius:2px;min-width:0;min-height:0}.cell.empty{background:#fff;border-style:dashed;border-color:#cbd5e1}
+  .diagram-note{font-size:.78rem;color:var(--muted);margin-top:6px}.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#fff;border:1px solid #7cc5e7;font-size:.78rem;font-weight:700;margin:2px 4px 2px 0}
   .footer{color:var(--muted);text-align:center;font-size:.85rem;margin-top:22px}
-  @media(max-width:760px){.grid{grid-template-columns:1fr}.row3{grid-template-columns:1fr 1fr 1fr}.wrap{padding:16px}}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}.row3{grid-template-columns:repeat(3,1fr)}.wrap{padding:16px}.metric{font-size:.92rem}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div style="display:flex;align-items:center;gap:16px;margin-bottom:8px;flex-wrap:wrap">
     <img src="asi-logo.png" alt="Aeronautical Systems Inc." style="width:min(260px,68vw);height:auto;display:block">
-    <div>
-      <h1 style="margin:0">PackFit</h1>
-      <p class="sub" style="margin:2px 0 0">ASI Shipping Carton Optimizer</p>
-    </div>
+    <div><h1 style="margin:0">PackFit</h1><p class="sub" style="margin:2px 0 0">ASI Shipping Carton Optimizer</p></div>
   </div>
-  <div id="installNote" class="card" style="display:none;margin:14px 0 18px;padding:12px 14px;border-left:4px solid var(--accent2)">
-    <strong>Install on iPhone:</strong> open this page in Safari, tap the Share button, then choose <strong>Add to Home Screen</strong>.
-  </div>
+  <div id="installNote" class="card" style="display:none;margin:14px 0 18px;padding:12px 14px;border-left:4px solid var(--accent2)"><strong>Install on iPhone:</strong> open this page in Safari, tap Share, then choose <strong>Add to Home Screen</strong>.</div>
 
   <div class="grid">
     <section class="card">
@@ -70,7 +62,12 @@
         <div><label>Padding allowance per side (in)</label><input id="padding" type="number" min="0" step="0.25" value="0"></div>
       </div>
       <div class="row2" style="margin-top:10px">
-        <div><label>Maximum cartons</label><select id="maxCartons"><option>1</option><option>2</option><option selected>3</option><option value="10">Any</option></select></div>
+        <div><label>Item weight (lb) <span style="font-weight:400">optional</span></label><input id="itemWeight" type="number" min="0" step="0.1" placeholder="e.g. 4.5"></div>
+        <div><label>Max carton weight (lb) <span style="font-weight:400">optional</span></label><input id="maxWeight" type="number" min="0" step="0.1" placeholder="e.g. 50"></div>
+      </div>
+      <p class="helper">Weight limits are applied only when both weight fields are entered.</p>
+      <div class="row2" style="margin-top:10px">
+        <div><label>Maximum cartons</label><select id="maxCartons"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option value="10">Any (up to 10)</option></select></div>
         <div><label>Optimize for</label><select id="optimize"><option value="cartons">Fewest cartons</option><option value="volume">Least unused space</option></select></div>
       </div>
       <button onclick="calculate()">CALCULATE BEST FIT</button>
@@ -89,77 +86,39 @@
       <button class="danger" onclick="resetInventory()">Reset Default Inventory</button>
     </section>
   </div>
-  <div class="footer">ASI PackFit v2.0 • Works offline after first load • Data stays on this device.</div>
+  <div class="footer">ASI PackFit v2.1 • Mixed-carton optimizer • Weight limits • Visual packing layout • Works offline</div>
 </div>
 
 <script>
-const defaults = [
-[36,24,24],[32,24,24],[32,32,32],[36,18,18],[28,18,18],[25,25,25],[26,26,12],
-[30,15,15],[30,20,20],[24,16,12],[24,18,6],[24,12,12],[30,12,12],[28,12,6]
-];
-let inventory = JSON.parse(localStorage.getItem('packfit_inventory') || 'null') || defaults.map((d,i)=>({id:Date.now()+i,l:d[0],w:d[1],h:d[2],active:true}));
-
-function save(){ localStorage.setItem('packfit_inventory', JSON.stringify(inventory)); renderInventory(); }
+const defaults=[[36,24,24],[32,24,24],[32,32,32],[36,18,18],[28,18,18],[25,25,25],[26,26,12],[30,15,15],[30,20,20],[24,16,12],[24,18,6],[24,12,12],[30,12,12],[28,12,6]];
+let inventory=JSON.parse(localStorage.getItem('packfit_inventory')||'null')||defaults.map((d,i)=>({id:Date.now()+i,l:d[0],w:d[1],h:d[2],active:true}));
+function save(){localStorage.setItem('packfit_inventory',JSON.stringify(inventory));renderInventory()}
 function dims(b){return `${b.l} × ${b.w} × ${b.h}`}
-function renderInventory(){
-  const el=document.getElementById('inventory'); el.innerHTML='';
-  inventory.forEach(b=>{
-    const r=document.createElement('div'); r.className='boxrow';
-    r.innerHTML=`<div><strong>${dims(b)}</strong><br><small>${b.active?'Available':'Out of stock'}</small></div>
-      <button class="secondary" style="width:auto;margin:0;padding:7px 10px" onclick="toggleBox(${b.id})">${b.active?'Disable':'Enable'}</button>
-      <button class="danger" style="width:auto;margin:0;padding:7px 10px" onclick="removeBox(${b.id})">×</button>`;
-    el.appendChild(r);
-  });
-}
-function toggleBox(id){const b=inventory.find(x=>x.id===id); if(b){b.active=!b.active;save()}}
+function renderInventory(){const el=document.getElementById('inventory');el.innerHTML='';inventory.forEach(b=>{const r=document.createElement('div');r.className='boxrow';r.innerHTML=`<div><strong>${dims(b)}</strong><br><small>${b.active?'Available':'Out of stock'}</small></div><button class="secondary" style="width:auto;margin:0;padding:7px 10px" onclick="toggleBox(${b.id})">${b.active?'Disable':'Enable'}</button><button class="danger" style="width:auto;margin:0;padding:7px 10px" onclick="removeBox(${b.id})">×</button>`;el.appendChild(r)})}
+function toggleBox(id){const b=inventory.find(x=>x.id===id);if(b){b.active=!b.active;save()}}
 function removeBox(id){inventory=inventory.filter(x=>x.id!==id);save()}
-function addBox(){
-  const l=+newL.value,w=+newW.value,h=+newH.value;
-  if(!(l>0&&w>0&&h>0)) return alert('Enter all three carton dimensions.');
-  inventory.push({id:Date.now(),l,w,h,active:true}); save(); newL.value=newW.value=newH.value='';
-}
+function addBox(){const l=+newL.value,w=+newW.value,h=+newH.value;if(!(l>0&&w>0&&h>0))return alert('Enter all three carton dimensions.');inventory.push({id:Date.now(),l,w,h,active:true});save();newL.value=newW.value=newH.value=''}
 function resetInventory(){inventory=defaults.map((d,i)=>({id:Date.now()+i,l:d[0],w:d[1],h:d[2],active:true}));save()}
 function perms(a,b,c){return [[a,b,c],[a,c,b],[b,a,c],[b,c,a],[c,a,b],[c,b,a]]}
-function capacity(box,item,pad){
-  let best=null;
-  for(const [a,b,c] of perms(item.l+2*pad,item.w+2*pad,item.h+2*pad)){
-    const x=Math.floor(box.l/a), y=Math.floor(box.w/b), z=Math.floor(box.h/c); const cap=x*y*z;
-    if(cap>0 && (!best || cap>best.cap)) best={cap,x,y,z,orient:[a,b,c]};
-  }
-  return best;
-}
+function geometry(box,item,pad){let best=null;for(const [a,b,c] of perms(item.l+2*pad,item.w+2*pad,item.h+2*pad)){const x=Math.floor(box.l/a),y=Math.floor(box.w/b),z=Math.floor(box.h/c),cap=x*y*z;if(cap>0&&(!best||cap>best.cap))best={cap,x,y,z,orient:[a,b,c]}}return best}
+function compareState(a,b,mode){if(!b)return true;if(mode==='cartons')return a.count<b.count||(a.count===b.count&&(a.volume<b.volume||(a.volume===b.volume&&a.slots<b.slots)));return a.volume<b.volume||(a.volume===b.volume&&(a.count<b.count||(a.count===b.count&&a.slots<b.slots)))}
+function findBestCombo(types,q,max,mode){let states=Array(q+1).fill(null);states[0]={count:0,volume:0,slots:0,choices:[]};for(let used=0;used<max;used++){const next=states.slice();for(let covered=0;covered<=q;covered++){const s=states[covered];if(!s||s.count!==used)continue;for(let i=0;i<types.length;i++){const t=types[i],nc=Math.min(q,covered+t.cap),cand={count:s.count+1,volume:s.volume+t.volume,slots:s.slots+t.cap,choices:[...s.choices,i]};if(compareState(cand,next[nc],mode))next[nc]=cand}}states=next;if(states[q]&&mode==='cartons')break}return states[q]}
+function groupedChoice(chosen){const m=new Map();chosen.forEach(c=>{const k=c.id;m.set(k,{type:c,count:(m.get(k)?.count||0)+1})});return [...m.values()]}
+function diagramHTML(c,loaded,idx){const perLayer=c.x*c.y,shown=Math.min(perLayer,120),filled=Math.min(loaded,perLayer),cols=Math.max(1,Math.min(c.x,16)),rows=Math.max(1,Math.ceil(shown/cols));let cells='';for(let i=0;i<shown;i++)cells+=`<span class="cell ${i<filled?'':'empty'}"></span>`;const layersUsed=Math.ceil(loaded/perLayer);return `<div class="pack-card"><div class="pack-head"><div><strong>Carton ${idx+1}: ${dims(c)}</strong><br><small>${loaded} unit${loaded===1?'':'s'} loaded • capacity ${c.cap}</small></div><span class="badge">${c.x} × ${c.y} × ${c.z}</span></div><div class="diagram" style="grid-template-columns:repeat(${cols},1fr);grid-template-rows:repeat(${rows},1fr)">${cells}</div><div class="diagram-note">Top view of one layer (${c.x} × ${c.y}). ${c.z} layer${c.z===1?'':'s'} available; ${layersUsed} layer${layersUsed===1?'':'s'} used for this load.${c.weightLimited?' Weight limit reduces geometric capacity.':''}</div></div>`}
 function calculate(){
-  const item={l:+itemL.value,w:+itemW.value,h:+itemH.value}, q=+qty.value, pad=+padding.value||0, max=+maxCartons.value;
-  if(!(item.l>0&&item.w>0&&item.h>0&&q>0)) return alert('Enter valid item dimensions and quantity.');
-  const active=inventory.filter(b=>b.active).map(b=>{const p=capacity(b,item,pad); return p?{...b,...p,volume:b.l*b.w*b.h}:null}).filter(Boolean);
-  const candidates=[];
-  for(const b of active){
-    const cartons=Math.ceil(q/b.cap); if(cartons<=max){ const totalCap=cartons*b.cap; candidates.push({b,cartons,totalCap,wasteSlots:totalCap-q,wasteVolume:cartons*b.volume-q*item.l*item.w*item.h}); }
-  }
-  const mode=optimize.value;
-  candidates.sort((a,b)=> mode==='cartons' ? (a.cartons-b.cartons || a.wasteVolume-b.wasteVolume) : (a.wasteVolume-b.wasteVolume || a.cartons-b.cartons));
-  const out=document.getElementById('results');
-  if(!candidates.length){out.innerHTML='<div class="alt"><strong>No fit found.</strong><br><span style="color:var(--muted)">Try more cartons, reduce padding, or add another shipping box size.</span></div>';return}
-  const c=candidates[0], packed=Math.min(q,c.b.cap), last=q-c.b.cap*(c.cartons-1);
-  out.innerHTML=`<div class="winner"><h2>✅ Best Fit: ${c.cartons} carton${c.cartons>1?'s':''}</h2>
-    <div class="metric"><span>Carton size</span><strong>${dims(c.b)}</strong></div>
-    <div class="metric"><span>Capacity per carton</span><strong>${c.b.cap}</strong></div>
-    <div class="metric"><span>Packing layout</span><strong>${c.b.x} × ${c.b.y} × ${c.b.z}</strong></div>
-    <div class="metric"><span>Item orientation</span><strong>${c.b.orient.join(' × ')}</strong></div>
-    <div class="metric"><span>Distribution</span><strong>${c.cartons===1?q:`${c.cartons-1} carton(s) × ${c.b.cap}, last carton × ${last}`}</strong></div>
-    <div class="metric"><span>Unused unit slots</span><strong>${c.wasteSlots}</strong></div></div>`;
-  const alts=candidates.slice(1,4);
-  if(alts.length){ out.innerHTML += '<div class="alt"><strong>Alternatives</strong>'+alts.map(a=>`<div class="metric"><span>${dims(a.b)}</span><strong>${a.cartons} carton${a.cartons>1?'s':''} • ${a.b.cap}/carton</strong></div>`).join('')+'</div>'; }
+ const item={l:+itemL.value,w:+itemW.value,h:+itemH.value},q=Math.floor(+qty.value),pad=+padding.value||0,max=+maxCartons.value,iw=+itemWeight.value||0,mw=+maxWeight.value||0,weightOn=iw>0&&mw>0;
+ if(!(item.l>0&&item.w>0&&item.h>0&&q>0))return alert('Enter valid item dimensions and quantity.');if(weightOn&&iw>mw)return alert('One item is heavier than the maximum carton weight.');
+ const paddedVol=(item.l+2*pad)*(item.w+2*pad)*(item.h+2*pad);
+ const types=inventory.filter(b=>b.active).map(b=>{const g=geometry(b,item,pad);if(!g)return null;const weightCap=weightOn?Math.floor(mw/iw):Infinity,cap=Math.min(g.cap,weightCap);if(cap<1)return null;return {...b,...g,geomCap:g.cap,cap,weightLimited:weightOn&&weightCap<g.cap,volume:b.l*b.w*b.h}}).filter(Boolean);
+ const mode=optimize.value,best=findBestCombo(types,q,max,mode),out=document.getElementById('results');
+ if(!best){out.innerHTML='<div class="alt"><strong>No fit found.</strong><br><span style="color:var(--muted)">Try more cartons, reduce padding, raise the weight limit, or add another shipping carton size.</span></div>';return}
+ const chosen=best.choices.map(i=>types[i]).sort((a,b)=>b.cap-a.cap||a.volume-b.volume);let remain=q;const loads=chosen.map(c=>{const n=Math.min(remain,c.cap);remain-=n;return n});
+ const totalCartonVol=chosen.reduce((s,c)=>s+c.volume,0),unusedVol=Math.max(0,totalCartonVol-q*paddedVol),unusedSlots=chosen.reduce((s,c)=>s+c.cap,0)-q,groups=groupedChoice(chosen);
+ out.innerHTML=`<div class="winner"><h2>✅ Best Fit: ${chosen.length} carton${chosen.length>1?'s':''}</h2><div>${groups.map(g=>`<span class="badge">${g.count} × ${dims(g.type)}</span>`).join('')}</div><div class="metric"><span>Carton combination</span><strong>${groups.length>1?'Mixed sizes':'Single size'}</strong></div><div class="metric"><span>Total unit capacity</span><strong>${q+unusedSlots}</strong></div><div class="metric"><span>Unused unit slots</span><strong>${unusedSlots}</strong></div><div class="metric"><span>Approx. unused volume</span><strong>${Math.round(unusedVol).toLocaleString()} in³</strong></div>${weightOn?`<div class="metric"><span>Shipment item weight</span><strong>${(q*iw).toFixed(1)} lb</strong></div><div class="metric"><span>Max per carton</span><strong>${mw} lb</strong></div>`:''}</div><div class="pack-list">${chosen.map((c,i)=>diagramHTML(c,loads[i],i)).join('')}</div>`;
 }
-renderInventory(); calculate();
-
-// PWA + iPhone install support
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
-}
-const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-const isiOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-if (isiOS && !standalone) document.getElementById('installNote').style.display='block';
+renderInventory();calculate();
+if('serviceWorker'in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'))}
+const standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true,isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);if(isiOS&&!standalone)document.getElementById('installNote').style.display='block';
 </script>
 </body>
 </html>
