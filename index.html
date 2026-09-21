@@ -7,20 +7,19 @@
 <div class="head"><img src="asi-logo.png" alt="Aeronautical Systems Inc."><div><h1>PackFit</h1><div class="sub">ASI Shipping Carton Optimizer</div></div></div>
 <div class="grid">
 <section class="card"><h2>Shipment</h2>
-<div class="r3"><div><label>Nominal Length</label><input id="L" type="number" step=".01" value="9"></div><div><label>Nominal Width</label><input id="W" type="number" step=".01" value="5.5"></div><div><label>Nominal Height</label><input id="H" type="number" step=".01" value="5.5"></div></div>
+<div class="r3"><div><label>Nominal Length</label><input id="L" type="number" step=".01" placeholder="Enter length"></div><div><label>Nominal Width</label><input id="W" type="number" step=".01" placeholder="Enter width"></div><div><label>Nominal Height</label><input id="H" type="number" step=".01" placeholder="Enter height"></div></div>
 <div class="section"><strong>Actual packed outside dimensions</strong><div class="help">Optional. Use the real assembled size. Example: a 5 × 5 × 5 white mailer can be entered as 5.5 × 5.5 × 5.75.</div>
 <div class="r3"><div><label>Actual L</label><input id="aL" type="number" step=".01" placeholder="same"></div><div><label>Actual W</label><input id="aW" type="number" step=".01" placeholder="same"></div><div><label>Actual H</label><input id="aH" type="number" step=".01" placeholder="same"></div></div></div>
-<div class="r2"><div><label>Quantity</label><input id="Q" type="number" min="1" value="63"></div><div><label>Additional clearance per side</label><input id="PAD" type="number" min="0" step=".125" value="0"></div></div>
+<div class="r2"><div><label>Quantity</label><input id="Q" type="number" min="1" placeholder="Enter quantity"></div><div><label>Additional clearance per side</label><input id="PAD" type="number" min="0" step=".125" placeholder="Optional"></div></div>
 <div class="r2"><div><label>Weight per unit container (lb)</label><input id="IW" type="number" min="0" step=".1" placeholder="optional"></div><div><label>Max gross carton weight (lb)</label><input id="MW" type="number" min="0" step=".1" placeholder="optional"></div></div>
 <div class="r2"><div><label>Maximum cartons</label><select id="MAX"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option value="10">Any (up to 10)</option></select></div><div><label>Optimize for</label><select id="OPT"><option value="cartons">Fewest cartons</option><option value="volume">Least unused space</option></select></div></div>
-<button onclick="calc()">CALCULATE BEST FIT</button><div id="results"></div></section>
+<div class="section"><strong>Automatic packing allowance</strong><div class="help">PackFit automatically adds <strong>+0.50&quot; Length, +0.50&quot; Width, and +0.75&quot; Height</strong> before calculating fit. Additional clearance is only for extra packing material.</div></div><button onclick="calc()">CALCULATE BEST FIT</button><div id="results"></div></section>
 <section class="card"><h2>Shipping Cartons: Double Wall</h2>
 <div class="r3"><div><label>L</label><input id="nL" type="number"></div><div><label>W</label><input id="nW" type="number"></div><div><label>H</label><input id="nH" type="number"></div></div>
 <div class="r2"><div><label>Empty carton / tare (lb)</label><input id="nT" type="number" step=".01" placeholder="optional"></div><div><label>Uline model</label><input id="nS" placeholder="optional"></div></div>
 <button class="secondary" onclick="addBox()">+ Add Double Wall Carton</button><div id="inventory" class="inventory"></div><button class="danger" onclick="resetInv()">Reset Default Inventory</button>
-</section></div><div class="footer">ASI PackFit v2.2 • Actual-fit dimensions • Gross carton weights • Works offline</div></div>
-<script>
-const D=[{l:36,w:24,h:24,t:7.82,s:'S-13333'},{l:32,w:24,h:24,t:7.30,s:'S-11257'},{l:32,w:32,h:32,t:null,s:''},{l:36,w:18,h:18,t:null,s:''},{l:28,w:18,h:18,t:null,s:''},{l:25,w:25,h:25,t:null,s:'S-22118'},{l:26,w:26,h:12,t:null,s:'S-18167'},{l:30,w:15,h:15,t:null,s:'S-21542'},{l:30,w:20,h:20,t:null,s:''},{l:24,w:16,h:12,t:3.05,s:'S-20412'},{l:24,w:18,h:6,t:null,s:''},{l:24,w:12,h:12,t:null,s:''},{l:30,w:12,h:12,t:2.76,s:'S-23964'},{l:28,w:12,h:6,t:null,s:''}];
+</section></div><div class="footer"><strong>ASI PackFit v2.2.1</strong><br>Developed by <strong>Edward Croce</strong><br>Aeronautical Systems Inc.<br>Actual-fit calculations • Gross carton weights • Works offline</div></div><script>
+const D=[{l:36,w:24,h:24,t:7.82,s:'S-13333'},{l:32,w:24,h:24,t:null,s:'S-11257'},{l:32,w:32,h:32,t:null,s:''},{l:36,w:18,h:18,t:null,s:''},{l:28,w:18,h:18,t:null,s:''},{l:25,w:25,h:25,t:null,s:'S-22118'},{l:26,w:26,h:12,t:null,s:'S-18167'},{l:30,w:15,h:15,t:null,s:'S-21542'},{l:30,w:20,h:20,t:null,s:''},{l:24,w:16,h:12,t:null,s:'S-20412'},{l:24,w:18,h:6,t:null,s:''},{l:24,w:12,h:12,t:null,s:''},{l:30,w:12,h:12,t:null,s:'S-23964'},{l:28,w:12,h:6,t:null,s:''}];
 const K={};D.forEach(x=>K[x.l+'x'+x.w+'x'+x.h]=x);
 let old=JSON.parse(localStorage.getItem('packfit_inventory')||'null');
 let inv=(old||D).map((b,i)=>{let k=K[b.l+'x'+b.w+'x'+b.h]||{};return{id:b.id||Date.now()+i,l:+b.l,w:+b.w,h:+b.h,active:b.active!==false,t:b.t??b.tare??k.t??null,s:b.s||b.sku||k.s||'',cat:'Double Wall'}});
@@ -32,27 +31,25 @@ function addBox(){let l=+nL.value,w=+nW.value,h=+nH.value;if(!(l>0&&w>0&&h>0))re
 function resetInv(){inv=D.map((b,i)=>({id:Date.now()+i,...b,active:true,cat:'Double Wall'}));save()}
 
 function perms(a,b,c){return[[a,b,c],[a,c,b],[b,a,c],[b,c,a],[c,a,b],[c,b,a]]}
-function geo(b,u,p){let z=null;for(let o of perms(u.l+2*p,u.w+2*p,u.h+2*p)){let x=Math.floor(b.l/o[0]),y=Math.floor(b.w/o[1]),n=Math.floor(b.h/o[2]),c=x*y*n;if(c>0&&(!z||c>z.c))z={c,x,y,z:n,o}}return z}
+function geo(b,u,p){let best=null;for(let o of perms(u.l+.5+2*p,u.w+.5+2*p,u.h+.75+2*p)){let nx=Math.floor(b.l/o[0]),ny=Math.floor(b.w/o[1]),nz=Math.floor(b.h/o[2]),c=nx*ny*nz;if(c>0&&(!best||c>best.c))best={c,nx,ny,nz,o}}return best}
 function better(a,b,m){if(!b)return true;return m==='cartons'?(a.n<b.n||(a.n===b.n&&(a.v<b.v||(a.v===b.v&&a.sl<b.sl)))):(a.v<b.v||(a.v===b.v&&(a.n<b.n||(a.n===b.n&&a.sl<b.sl))))}
 function combo(T,q,max,m){let S=Array(q+1).fill(null);S[0]={n:0,v:0,sl:0,ch:[]};for(let n=0;n<max;n++){let N=S.slice();for(let c=0;c<=q;c++){let s=S[c];if(!s||s.n!==n)continue;T.forEach((t,i)=>{let nc=Math.min(q,c+t.c),a={n:s.n+1,v:s.v+t.v,sl:s.sl+t.c,ch:[...s.ch,i]};if(better(a,N[nc],m))N[nc]=a})}S=N;if(S[q]&&m==='cartons')break}return S[q]}
 function calc(){
- let nom={l:+L.value,w:+W.value,h:+H.value},aa=[aL.value,aW.value,aH.value],has=aa.some(x=>x!=='');
- if(has&&!aa.every(x=>+x>0))return alert('Enter all three actual packed dimensions, or leave all three blank.');
- let u=has?{l:+aL.value,w:+aW.value,h:+aH.value}:nom,q=Math.floor(+Q.value),p=+PAD.value||0,iw=+IW.value||0,mw=+MW.value||0,max=+MAX.value;
+ let nom={l:+L.value,w:+W.value,h:+H.value},u=nom,q=Math.floor(+Q.value),p=+PAD.value||0,iw=+IW.value||0,mw=+MW.value||0,max=+MAX.value;
  if(!(nom.l>0&&nom.w>0&&nom.h>0&&q>0))return alert('Enter valid dimensions and quantity.');
- let e={l:u.l+2*p,w:u.w+2*p,h:u.h+2*p},uv=e.l*e.w*e.h;
+ let e={l:u.l+.5+2*p,w:u.w+.5+2*p,h:u.h+.75+2*p},uv=e.l*e.w*e.h;
  let T=inv.filter(b=>b.active).map(b=>{let g=geo(b,u,p);if(!g)return null;let c=g.c,wl=false;if(iw>0&&mw>0){let wc=Math.floor((mw-(b.t||0))/iw);c=Math.min(c,wc);wl=wc<g.c}return c>0?{...b,...g,c,wl,v:b.l*b.w*b.h}:null}).filter(Boolean);
  let B=combo(T,q,max,OPT.value),out=el('results');if(!B){out.innerHTML='<div class="alt"><strong>No fit found.</strong><br>Try more cartons, less clearance, a higher weight limit, or another carton size.</div>';return}
  let C=B.ch.map(i=>T[i]).sort((a,b)=>b.c-a.c||a.v-b.v),rem=q,loads=C.map(c=>{let n=Math.min(rem,c.c);rem-=n;return n}),tv=C.reduce((s,c)=>s+c.v,0),unused=Math.max(0,tv-q*uv),util=100*q*uv/tv,slots=C.reduce((s,c)=>s+c.c,0)-q;
  let map=new Map();C.forEach(c=>map.set(c.id,{c,n:(map.get(c.id)?.n||0)+1}));let groups=[...map.values()];
  let allT=C.every(c=>c.t!=null),tare=C.reduce((s,c)=>s+(c.t||0),0),contents=q*iw,gross=contents+tare,fmt=n=>(+n).toFixed(2).replace(/\.00$/,'');
  out.innerHTML=`<div class="winner"><h2>✅ Best Fit: ${C.length} carton${C.length>1?'s':''}</h2><div>${groups.map(g=>`<span class="badge">${g.n} × ${dim(g.c)}</span>`).join('')}</div>
- <div class="metric"><span>Nominal unit size</span><strong>${dim(nom)}</strong></div>${has?`<div class="metric"><span>Actual packed size</span><strong>${fmt(u.l)} × ${fmt(u.w)} × ${fmt(u.h)}</strong></div>`:''}
- <div class="metric"><span>Dimensions used for fit</span><strong>${fmt(e.l)} × ${fmt(e.w)} × ${fmt(e.h)}</strong></div><div class="metric"><span>Unused unit slots</span><strong>${slots}</strong></div>
+ <div class="metric"><span>Nominal unit size</span><strong>${dim(nom)}</strong></div>
+ <div class="metric"><span>Packing dimensions used</span><strong>${fmt(e.l)} × ${fmt(e.w)} × ${fmt(e.h)}</strong></div><div class="metric"><span>Unused unit slots</span><strong>${slots}</strong></div>
  <div class="metric"><span>Unused cubic volume</span><strong>${Math.round(unused).toLocaleString()} in³</strong></div><div class="metric"><span>Space utilization</span><strong>${util.toFixed(1)}%</strong></div>
  ${iw>0?`<div class="metric"><span>Total contents weight</span><strong>${contents.toFixed(2)} lb</strong></div><div class="metric"><span>Total empty-carton weight</span><strong>${allT?tare.toFixed(2)+' lb':'Partial / tare missing'}</strong></div><div class="metric"><span>Estimated shipment gross</span><strong>${allT?gross.toFixed(2)+' lb':contents.toFixed(2)+' lb + missing tare'}</strong></div>`:''}</div>
- ${C.map((c,i)=>{let cw=loads[i]*iw,g=c.t!=null?cw+c.t:null;return`<div class="pack"><strong>Carton ${i+1}: ${dim(c)}</strong> <span class="badge">${c.x} × ${c.y} × ${c.z}</span><br><small>${loads[i]} units loaded • capacity ${c.c}${c.s?' • Uline '+c.s:''}</small>${iw>0?`<div class="metric"><span>Contents</span><strong>${cw.toFixed(2)} lb</strong></div><div class="metric"><span>Tare</span><strong>${c.t!=null?c.t.toFixed(2)+' lb':'Not set'}</strong></div><div class="metric"><span>Gross</span><strong>${g!=null?g.toFixed(2)+' lb':cw.toFixed(2)+' lb + tare'}</strong></div>`:''}</div>`}).join('')}
+ ${C.map((c,i)=>{let cw=loads[i]*iw,g=c.t!=null?cw+c.t:null;return`<div class="pack"><strong>Carton ${i+1}: ${dim(c)}</strong> <span class="badge">${c.nx} × ${c.ny} × ${c.nz}</span><br><small>${loads[i]} units loaded • capacity ${c.c}${c.s?' • Uline '+c.s:''}</small>${iw>0?`<div class="metric"><span>Contents</span><strong>${cw.toFixed(2)} lb</strong></div><div class="metric"><span>Tare</span><strong>${c.t!=null?c.t.toFixed(2)+' lb':'Not set'}</strong></div><div class="metric"><span>Gross</span><strong>${g!=null?g.toFixed(2)+' lb':cw.toFixed(2)+' lb + tare'}</strong></div>`:''}</div>`}).join('')}
  ${mw>0&&C.some(c=>c.t==null)?'<div class="alt"><strong>Weight caution:</strong> a selected carton has no verified tare. Its limit currently uses contents weight only.</div>':''}`;
 }
-save();calc();if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
+save();if('serviceWorker'in navigator)addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
 </script></body></html>
