@@ -29,11 +29,8 @@ dialog{border:0;border-radius:16px;padding:0;max-width:520px;width:calc(100% - 2
 <div class="r2"><div><label>Empty carton / tare (lb)</label><input id="nT" type="number" step=".01" placeholder="optional"></div><div><label>Uline model</label><input id="nS" placeholder="optional"></div></div>
 <button class="secondary" onclick="addBox()">+ Add Double Wall Carton</button><div id="inventory" class="inventory"></div><button class="danger" onclick="resetInv()">Reset Default Inventory</button>
 </section></div>
-<dialog id="editDlg"><div class="dlg"><h3>Edit Shipping Carton</h3>
-<div class="r3"><div><label>Length</label><input id="eL" type="number" step=".01"></div><div><label>Width</label><input id="eW" type="number" step=".01"></div><div><label>Height</label><input id="eH" type="number" step=".01"></div></div>
-<div class="r2"><div><label>Empty carton / tare (lb) <span style="font-weight:400">optional</span></label><input id="eT" type="number" min="0" step=".01" placeholder="Optional"></div><div><label>Uline model <span style="font-weight:400">optional</span></label><input id="eS" placeholder="Optional"></div></div>
-<div class="dlgBtns"><button class="secondary" onclick="editDlg.close()">Cancel</button><button onclick="saveEdit()">Save Carton</button></div></div></dialog>
-<dialog id="editDlg"><div class="dlg"><h3>Edit Shipping Carton</h3><div class="r3"><div><label>Length</label><input id="eL" type="number" step=".01"></div><div><label>Width</label><input id="eW" type="number" step=".01"></div><div><label>Height</label><input id="eH" type="number" step=".01"></div></div><div class="r2"><div><label>Empty carton / tare (lb) <span style="font-weight:400">optional</span></label><input id="eT" type="number" min="0" step=".01" placeholder="Optional"></div><div><label>Uline model <span style="font-weight:400">optional</span></label><input id="eS" placeholder="Optional"></div></div><div class="dlgBtns"><button class="secondary" onclick="editDlg.close()">Cancel</button><button onclick="saveEdit()">Save Carton</button></div></div></dialog><div class="footer"><strong>ASI PackFit v2.2.3</strong><br>Developed by <strong>Edward Croce</strong><br>Aeronautical Systems Inc.<br>Actual-fit calculations • Gross carton weights • Works offline</div></div><script>
+
+<div class="footer"><strong>ASI PackFit v2.2.4</strong><br>Developed by <strong>Edward Croce</strong><br>Aeronautical Systems Inc.<br>Actual-fit calculations • Gross carton weights • Works offline</div></div><script>
 const D=[{l:36,w:24,h:24,t:7.82,s:'S-13333'},{l:32,w:24,h:24,t:null,s:'S-11257'},{l:32,w:32,h:32,t:null,s:''},{l:36,w:18,h:18,t:null,s:''},{l:28,w:18,h:18,t:null,s:''},{l:25,w:25,h:25,t:null,s:'S-22118'},{l:26,w:26,h:12,t:null,s:'S-18167'},{l:30,w:15,h:15,t:null,s:'S-21542'},{l:30,w:20,h:20,t:null,s:''},{l:24,w:16,h:12,t:null,s:'S-20412'},{l:24,w:18,h:6,t:null,s:''},{l:24,w:12,h:12,t:null,s:''},{l:30,w:12,h:12,t:null,s:'S-23964'},{l:28,w:12,h:6,t:null,s:''}];
 const K={};D.forEach(x=>K[x.l+'x'+x.w+'x'+x.h]=x);
 let old=JSON.parse(localStorage.getItem('packfit_inventory')||'null');
@@ -41,26 +38,19 @@ let inv=(old||D).map((b,i)=>{let k=K[b.l+'x'+b.w+'x'+b.h]||{};return{id:b.id||Da
 const el=id=>document.getElementById(id),dim=b=>`${b.l} × ${b.w} × ${b.h}`;
 function save(){localStorage.setItem('packfit_inventory',JSON.stringify(inv));render()}
 function render(){el('inventory').innerHTML='';inv.forEach(b=>{let r=document.createElement('div');r.className='boxrow';r.innerHTML=`<div><strong>${dim(b)}</strong><br><small>Double Wall • ${b.t!=null?b.t.toFixed(2)+' lb tare':'tare not set'}${b.s?' • Uline '+b.s:''} • ${b.active?'Available':'Out of stock'}</small></div><button class="secondary" onclick="editBox(${b.id})">Edit</button><button class="secondary" onclick="toggle(${b.id})">${b.active?'Disable':'Enable'}</button><button class="danger" onclick="del(${b.id})">×</button>`;el('inventory').appendChild(r)})}
-function toggle(id){let b=inv.find(x=>x.id===id);b.active=!b.active;save()}function del(id){inv=inv.filter(x=>x.id!==id);save()}let editingId=null;function editBox(id){let b=inv.find(x=>x.id===id);if(!b)return;editingId=id;eL.value=b.l;eW.value=b.w;eH.value=b.h;eT.value=b.t??'';eS.value=b.s||'';editDlg.showModal()}function saveEdit(){let b=inv.find(x=>x.id===editingId),l=+eL.value,w=+eW.value,h=+eH.value;if(!b)return;if(!(l>0&&w>0&&h>0))return alert('Enter all three carton dimensions.');b.l=l;b.w=w;b.h=h;b.t=eT.value===''?null:+eT.value;b.s=eS.value.trim();editDlg.close();save()}
-function addBox(){let l=+nL.value,w=+nW.value,h=+nH.value;if(!(l>0&&w>0&&h>0))return alert('Enter all three carton dimensions.');inv.push({id:Date.now(),l,w,h,active:true,t:nT.value===''?null:+nT.value,s:nS.value.trim(),cat:'Double Wall'});save();nL.value=nW.value=nH.value=nT.value=nS.value=''}
-function resetInv(){inv=D.map((b,i)=>({id:Date.now()+i,...b,active:true,cat:'Double Wall'}));save()}
-
-function perms(a,b,c){return[[a,b,c],[a,c,b],[b,a,c],[b,c,a],[c,a,b],[c,b,a]]}
-function geo(b,u,p){let best=null;for(let o of perms(u.l+.5+2*p,u.w+.5+2*p,u.h+.75+2*p)){let nx=Math.floor(b.l/o[0]),ny=Math.floor(b.w/o[1]),nz=Math.floor(b.h/o[2]),c=nx*ny*nz;if(c>0&&(!best||c>best.c))best={c,nx,ny,nz,o}}return best}
-function better(a,b,m){if(!b)return true;return m==='cartons'?(a.n<b.n||(a.n===b.n&&(a.v<b.v||(a.v===b.v&&a.sl<b.sl)))):(a.v<b.v||(a.v===b.v&&(a.n<b.n||(a.n===b.n&&a.sl<b.sl))))}
-function combo(T,q,max,m){let S=Array(q+1).fill(null);S[0]={n:0,v:0,sl:0,ch:[]};for(let n=0;n<max;n++){let N=S.slice();for(let c=0;c<=q;c++){let s=S[c];if(!s||s.n!==n)continue;T.forEach((t,i)=>{let nc=Math.min(q,c+t.c),a={n:s.n+1,v:s.v+t.v,sl:s.sl+t.c,ch:[...s.ch,i]};if(better(a,N[nc],m))N[nc]=a})}S=N;if(S[q]&&m==='cartons')break}return S[q]}
-
-function diagram(c,loaded){
- let per=c.nx*c.ny, layers=Math.ceil(Math.min(loaded,c.c)/per), left=loaded, html='<div class="packDiagram"><strong>Packing layout</strong><div class="help">Top-down layer view. Each rectangle represents one packed unit container.</div>';
- for(let z=0;z<layers;z++){
-   let here=Math.min(left,per);left-=here;
-   html+='<div class="layerTitle">Layer '+(z+1)+' of '+c.nz+' available</div><div class="layerGrid" style="grid-template-columns:repeat('+c.nx+',minmax(34px,1fr))">';
-   for(let i=0;i<per;i++)html+='<div class="unitCell '+(i>=here?'empty':'')+'">'+(i<here?'UNIT':'')+'</div>';
-   html+='</div>';
- }
- return html+'<div class="help">Layout: '+c.nx+' × '+c.ny+' per layer × '+c.nz+' layer'+(c.nz===1?'':'s')+'. Rotate the unit container to match this orientation.</div></div>';
-}
-function diagram(c,loaded){let per=c.nx*c.ny,layers=Math.ceil(Math.min(loaded,c.c)/per),left=loaded,html='<div class="packDiagram"><strong>Packing layout</strong><div class="help">Top-down layer view. Each rectangle represents one packed unit container.</div>';for(let z=0;z<layers;z++){let here=Math.min(left,per);left-=here;html+='<div class="layerTitle">Layer '+(z+1)+' of '+c.nz+' available</div><div class="layerGrid" style="grid-template-columns:repeat('+c.nx+',minmax(34px,1fr))">';for(let i=0;i<per;i++)html+='<div class="unitCell '+(i>=here?'empty':'')+'">'+(i<here?'UNIT':'')+'</div>';html+='</div>'}return html+'<div class="help">Layout: '+c.nx+' × '+c.ny+' per layer × '+c.nz+' layer'+(c.nz===1?'':'s')+'. Rotate the unit container to match this orientation.</div></div>'}function calc(){
+function toggle(id){let b=inv.find(x=>x.id===id);b.active=!b.active;save()}function del(id){inv=inv.filter(x=>x.id!==id);save()}function editBox(id){
+ let b=inv.find(x=>x.id===id); if(!b)return;
+ let l=prompt('Carton length (in):',b.l); if(l===null)return;
+ let w=prompt('Carton width (in):',b.w); if(w===null)return;
+ let h=prompt('Carton height (in):',b.h); if(h===null)return;
+ l=+l;w=+w;h=+h;
+ if(!(l>0&&w>0&&h>0))return alert('Length, width, and height must be greater than zero.');
+ let tare=prompt('Empty carton / tare weight in lb (optional):',b.t??''); if(tare===null)return;
+ let sku=prompt('Uline model (optional):',b.s||''); if(sku===null)return;
+ if(tare!=='' && !(+tare>=0))return alert('Tare weight must be zero or greater.');
+ b.l=l;b.w=w;b.h=h;b.t=tare===''?null:+tare;b.s=sku.trim();save();
+ alert('Carton updated and saved.');
+}function diagram(c,loaded){let per=c.nx*c.ny,layers=Math.ceil(Math.min(loaded,c.c)/per),left=loaded,html='<div class="packDiagram"><strong>Packing layout</strong><div class="help">Top-down layer view. Each rectangle represents one packed unit container.</div>';for(let z=0;z<layers;z++){let here=Math.min(left,per);left-=here;html+='<div class="layerTitle">Layer '+(z+1)+' of '+c.nz+' available</div><div class="layerGrid" style="grid-template-columns:repeat('+c.nx+',minmax(34px,1fr))">';for(let i=0;i<per;i++)html+='<div class="unitCell '+(i>=here?'empty':'')+'">'+(i<here?'UNIT':'')+'</div>';html+='</div>'}return html+'<div class="help">Layout: '+c.nx+' × '+c.ny+' per layer × '+c.nz+' layer'+(c.nz===1?'':'s')+'. Rotate the unit container to match this orientation.</div></div>';}function calc(){
  let nom={l:+L.value,w:+W.value,h:+H.value},u=nom,q=Math.floor(+Q.value),p=+PAD.value||0,iw=+IW.value||0,mw=+MW.value||0,max=+MAX.value;
  if(!(nom.l>0&&nom.w>0&&nom.h>0&&q>0))return alert('Enter valid dimensions and quantity.');
  let e={l:u.l+.5+2*p,w:u.w+.5+2*p,h:u.h+.75+2*p},uv=e.l*e.w*e.h;
